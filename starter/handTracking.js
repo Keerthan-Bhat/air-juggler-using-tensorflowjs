@@ -2,26 +2,28 @@
 let detector = null;
 let video = null;
 let isDetecting = false;
-let detectionCallback = null;
+let sendHandsCallback = null;
 
 /**
  * Setup hand tracking with MediaPipe Hands
  * @param {HTMLVideoElement} videoElement - Video element for webcam
- * @param {Function} callback - Called with hand positions [{x, y}]
+ * @param {Function} sendHands - Called with hand positions [{x, y}]
  */
-async function setupHandTracking(videoElement, callback) {
+async function setupHandTracking(videoElement, sendHands) {
   video = videoElement;
-  detectionCallback = callback;
+  sendHandsCallback = sendHands;
 
   try {
-    // TODO: Step 3 - Request Webcam Access
+    // TODO: Step 3a - Request Webcam Access
     // Request webcam access using getUserMedia:
 
+    // TODO: Step 3b - Request Webcam Access
     // Connect the stream to the video element:
 
-    // TODO: Step 4 - Load MediaPipe Hands Model
+    // TODO: Step 4a - Load MediaPipe Hands Model
     // Configure and load the model:
 
+    // TODO: Step 4b - Load MediaPipe Hands Model
     // Create the detector:
 
     console.log("Hand tracking initialized successfully");
@@ -56,7 +58,7 @@ function stopDetection() {
 }
 
 /**
- * Detect hands and call callback with positions
+ * Detect hands and call sendHandsCallback with positions
  */
 async function detectHands() {
   if (!isDetecting) return;
@@ -65,10 +67,11 @@ async function detectHands() {
     // TODO: Step 5 - Detect Hands in Real-Time
     // Run hand detection on current video frame:
 
-    // TODO: Step 6 - Transform Hand Landmarks to Coordinates
+    // TODO: Step 6a - Transform Hand Landmarks to Coordinates
     // Transform hand landmarks to canvas coordinates:
 
-    // Call callback with hand positions:
+    // TODO: Step 6b - Transform Hand Landmarks to Coordinates
+    // Call sendHandsCallback with hand positions:
 
   } catch (error) {
     console.error("Error detecting hands:", error);

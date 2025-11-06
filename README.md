@@ -33,7 +33,7 @@ A beginner-friendly tutorial project that teaches TensorFlow.js and MediaPipe Ha
 
 ```
 air-juggler/
-├── starter/              # Incomplete code with TODOs (start here!)
+├── starter/             # Incomplete code with TODOs (start here!)
 │   ├── index.html       # HTML without TensorFlow scripts
 │   ├── style.css        # Complete styling (provided)
 │   ├── game.js          # Game boilerplate with TODOs
@@ -150,7 +150,7 @@ Once you've completed the tutorial, try these challenges:
 
 ## Credits
 
-Built as part of the [Codédex Projects](https://www.codedex.io/projects) tutorial series.
+Built as part of the [Codédex Project Tutorials](https://www.codedex.io/projects).
 
 ## License
 

@@ -247,7 +247,7 @@ async function startGame() {
 
     const success = await window.handTracking.setupHandTracking(
       webcam,
-      (hands) => {
+      function receiveHands(hands) {
         gameState.hands = hands;
       },
     );

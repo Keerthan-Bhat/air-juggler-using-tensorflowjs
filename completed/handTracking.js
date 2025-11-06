@@ -2,16 +2,16 @@
 let detector = null;
 let video = null;
 let isDetecting = false;
-let detectionCallback = null;
+let sendHandsCallback = null;
 
 /**
  * Setup hand tracking with MediaPipe Hands
  * @param {HTMLVideoElement} videoElement - Video element for webcam
- * @param {Function} callback - Called with hand positions [{x, y}]
+ * @param {Function} sendHands - Called with hand positions [{x, y}]
  */
-async function setupHandTracking(videoElement, callback) {
+async function setupHandTracking(videoElement, sendHands) {
   video = videoElement;
-  detectionCallback = callback;
+  sendHandsCallback = sendHands;
 
   try {
     // Request webcam access
@@ -68,7 +68,7 @@ function stopDetection() {
 }
 
 /**
- * Detect hands and call callback with positions
+ * Detect hands and call sendHandsCallback with positions
  */
 async function detectHands() {
   if (!isDetecting) return;
@@ -91,9 +91,9 @@ async function detectHands() {
       };
     });
 
-    // Call callback with hand positions
-    if (detectionCallback) {
-      detectionCallback(handPositions);
+    // Call sendHandsCallback with hand positions
+    if (sendHandsCallback) {
+      sendHandsCallback(handPositions);
     }
   } catch (error) {
     console.error("Error detecting hands:", error);
