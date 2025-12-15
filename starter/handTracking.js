@@ -10,8 +10,16 @@ let sendHandsCallback = null;
  * @param {Function} sendHands - Called with hand positions [{x, y}]
  */
 async function setupHandTracking(videoElement, sendHands) {
+  // Request webcam access using getUserMedia
+const stream = await navigator.mediaDevices.getUserMedia({
+  video: { width: 640, height: 480 },
+});
   video = videoElement;
   sendHandsCallback = sendHands;
+  // Connect the stream to the video element
+
+video.srcObject = stream;
+await video.play();
 
   try {
     // TODO: Step 3a - Request Webcam Access
@@ -61,6 +69,8 @@ function stopDetection() {
  * Detect hands and call sendHandsCallback with positions
  */
 async function detectHands() {
+  // Run hand detection on current video frame
+const hands = await detector.estimateHands(video);
   if (!isDetecting) return;
 
   try {
@@ -87,3 +97,29 @@ window.handTracking = {
   startDetection,
   stopDetection,
 };
+// Load MediaPipe Hands model
+const model = window.handPoseDetection.SupportedModels.MediaPipeHands;
+const detectorConfig = {
+  runtime: "mediapipe",
+  solutionPath: "https://cdn.jsdelivr.net/npm/@mediapipe/hands",
+  maxHands: 2,
+  modelType: "full",
+};
+// Create the detector
+detector = await window.handPoseDetection.createDetector(model, detectorConfig);
+// Transform hand landmarks to canvas coordinates
+const handPositions = hands.map((hand) => {
+  // Get palm center (average of wrist and thumb 4 points)
+  const palmBase = [0, 5, 9, 13, 17].map((i) => hand.keypoints[i]);
+  const avgX = palmBase.reduce((sum, kp) => sum + kp.x, 0) / palmBase.length;
+  const avgY = palmBase.reduce((sum, kp) => sum + kp.y, 0) / palmBase.length;
+
+  return {
+    x: 640 - avgX, // Mirror x coordinate; 640 is our video resolution width dimension when we initialize the video feed
+    y: avgY,
+  };
+});
+// Call sendHandsCallback with new hand positions
+if (sendHandsCallback) {
+  sendHandsCallback(handPositions);
+}

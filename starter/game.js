@@ -9,6 +9,36 @@ const config = {
 };
 
 // Game state
+// Initialize hand tracking if not already done
+if (!window.handTrackingInitialized) {
+  // Show loading overlay
+  loadingOverlay.classList.remove("hidden");
+  loadingStatus.textContent = "Requesting camera access...";
+
+  const webcam = document.getElementById("webcam");
+
+  // Update loading status
+  loadingStatus.textContent = "Loading MediaPipe Hands model...";
+
+  const success = await window.handTracking.setupHandTracking(
+    webcam,
+    function receiveHands(hands) {
+      gameState.hands = hands; // Update game state with detected hands
+    },
+  );
+
+  // Hide loading overlay
+  loadingOverlay.classList.add("hidden");
+
+  if (!success) {
+    endGame();
+    overlayMessage.textContent = "Camera access required to play!";
+    return;
+  }
+
+  window.handTracking.startDetection();
+  window.handTrackingInitialized = true;
+}
 let gameState = {
   balls: [],
   hands: [],
@@ -215,7 +245,16 @@ function gameLoop() {
       return;
     }
   }
-
+// Check if TensorFlow.js is loaded
+function checkTensorFlowLoaded() {
+  if (typeof tf !== "undefined" && typeof handPoseDetection !== "undefined") {
+    // TensorFlow.js and dependencies loaded
+    loadingOverlay.classList.add("hidden");
+  } else {
+    // Check again after a short delay
+    setTimeout(checkTensorFlowLoaded, 100);
+  }
+}
   render();
   gameState.animationId = requestAnimationFrame(gameLoop);
 }
